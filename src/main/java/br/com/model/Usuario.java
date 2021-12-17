@@ -10,7 +10,12 @@ import javax.persistence.Id;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Builder;
+import lombok.Data;
+
 @Entity
+@Builder
+@Data
 public class Usuario {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,100 +30,4 @@ public class Usuario {
 	@Column(name = "data_cadastro")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate DataCadastro;
-	
-	public Usuario() {
-		
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	public LocalDate getDataCadastro() {
-		return DataCadastro;
-	}
-
-	public void setDataCadastro(LocalDate dataCadastro) {
-		DataCadastro = dataCadastro;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((DataCadastro == null) ? 0 : DataCadastro.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Usuario other = (Usuario) obj;
-		if (DataCadastro == null) {
-			if (other.DataCadastro != null)
-				return false;
-		} else if (!DataCadastro.equals(other.DataCadastro))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (id != other.id)
-			return false;
-		if (nome == null) {
-			if (other.nome != null)
-				return false;
-		} else if (!nome.equals(other.nome))
-			return false;
-		if (senha == null) {
-			if (other.senha != null)
-				return false;
-		} else if (!senha.equals(other.senha))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", DataCadastro="
-				+ DataCadastro + "]";
-	}
 }
