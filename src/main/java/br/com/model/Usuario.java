@@ -10,12 +10,16 @@ import javax.persistence.Id;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

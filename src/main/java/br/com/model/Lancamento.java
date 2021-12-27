@@ -17,12 +17,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.model.enums.StatusLancamento;
 import br.com.model.enums.TipoLancamento;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Lancamento {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
