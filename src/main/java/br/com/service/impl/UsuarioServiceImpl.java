@@ -1,8 +1,12 @@
 package br.com.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.exception.ErroAutenticacao;
 import br.com.exception.RegraNegocioException;
 import br.com.model.Usuario;
 import br.com.repository.UsuarioRepository;
@@ -21,14 +25,24 @@ public class UsuarioServiceImpl implements UsuarioService{
 	
 	@Override
 	public Usuario autenticar(String email, String senha) {
+		Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
 		
-		return null;
+		if(!usuario.isPresent()) {
+			throw new ErroAutenticacao("Usuário não encontrado.");
+		}
+		
+		if(!usuario.get().getSenha().equals(senha)) {
+			throw new ErroAutenticacao("Senha inválida.");
+		}
+		
+		return usuario.get();
 	}
 
 	@Override
+	@Transactional
 	public Usuario SalvarUsuario(Usuario usuario) {
-		
-		return null;
+		ValidarEmail(usuario.getEmail());
+		return usuarioRepository.save(usuario);
 	}
 
 	@Override
