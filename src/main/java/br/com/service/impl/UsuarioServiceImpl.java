@@ -1,5 +1,6 @@
 package br.com.service.impl;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 	@Transactional
 	public Usuario SalvarUsuario(Usuario usuario) {
 		ValidarEmail(usuario.getEmail());
+		usuario.setDataCadastro(LocalDate.now());
 		return usuarioRepository.save(usuario);
 	}
 
