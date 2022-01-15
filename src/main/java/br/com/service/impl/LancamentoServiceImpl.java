@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -62,7 +63,10 @@ public class LancamentoServiceImpl implements LancamentoService{
 				.withIgnoreCase()
 				.withStringMatcher(StringMatcher.CONTAINING));
 		
-		return this.LancamentoRepository.findAll(example);
+		List<Lancamento> lancamentos = this.LancamentoRepository.findAll(example); 
+		System.out.println(lancamentos);
+		
+		return lancamentos;
 	}
 
 	@Override
@@ -97,6 +101,11 @@ public class LancamentoServiceImpl implements LancamentoService{
 		if(lancamento.getTipoLancamento() == null) {
 			throw new RegraNegocioException("O Tipo de lançamento é obrigatório.");
 		}
+	}
+
+	@Override
+	public Optional<Lancamento> ObterPorId(Long id) {
+		return this.LancamentoRepository.findById(id);
 	}
 
 }

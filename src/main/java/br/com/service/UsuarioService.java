@@ -1,5 +1,7 @@
 package br.com.service;
 
+import java.util.Optional;
+
 import br.com.model.Usuario;
 
 public interface UsuarioService {
@@ -9,4 +11,6 @@ public interface UsuarioService {
 	Usuario SalvarUsuario(Usuario usuario);
 	
 	void ValidarEmail(String email);
+	
+	Optional<Usuario> obterPorId(Long id);
 }

@@ -1,6 +1,7 @@
 package br.com.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.com.model.Lancamento;
 import br.com.model.enums.StatusLancamento;
@@ -18,4 +19,6 @@ public interface LancamentoService {
 	void AtualizarStatus(Lancamento lancamento, StatusLancamento status);
 	
 	void ValidarLancamento(Lancamento lancamento);
+	
+	Optional<Lancamento> ObterPorId(Long id);
 }
