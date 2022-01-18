@@ -51,6 +51,6 @@ public class Lancamento {
 	private TipoLancamento tipoLancamento;
 	@Column(name = "status_lancamento")
 	@Enumerated(EnumType.STRING)
-	private StatusLancamento statusLancamento;
+	private StatusLancamento status;
 	
 }

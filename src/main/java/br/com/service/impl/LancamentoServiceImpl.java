@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.exception.RegraNegocioException;
 import br.com.model.Lancamento;
 import br.com.model.enums.StatusLancamento;
+import br.com.model.enums.TipoLancamento;
 import br.com.repository.LancamentoRepository;
 import br.com.service.LancamentoService;
 
@@ -34,7 +35,7 @@ public class LancamentoServiceImpl implements LancamentoService{
 	public Lancamento SalvaLancamento(Lancamento lancamento) {
 		ValidarLancamento(lancamento);
 		
-		lancamento.setStatusLancamento(StatusLancamento.PENDENTE);
+		lancamento.setStatus(StatusLancamento.PENDENTE);
 		lancamento.setDataCadastro(LocalDate.now());
 		
 		return this.LancamentoRepository.save(lancamento);
@@ -58,20 +59,18 @@ public class LancamentoServiceImpl implements LancamentoService{
 	@Override
 	@Transactional(readOnly = true)
 	public List<Lancamento> BuscaLancamento(Lancamento lancamentoFiltro) {
-		Example example = Example.of(lancamentoFiltro, 
+		Example<Lancamento> example = Example.of( lancamentoFiltro, 
 				ExampleMatcher.matching()
 				.withIgnoreCase()
 				.withStringMatcher(StringMatcher.CONTAINING));
 		
-		List<Lancamento> lancamentos = this.LancamentoRepository.findAll(example); 
-		System.out.println(lancamentos);
-		
+		List<Lancamento> lancamentos = this.LancamentoRepository.findAll(example);
 		return lancamentos;
 	}
 
 	@Override
 	public void AtualizarStatus(Lancamento lancamento, StatusLancamento status) {
-		lancamento.setStatusLancamento(status);
+		lancamento.setStatus(status);
 		AtualizarLancamento(lancamento);
 	}
 
@@ -106,6 +105,23 @@ public class LancamentoServiceImpl implements LancamentoService{
 	@Override
 	public Optional<Lancamento> ObterPorId(Long id) {
 		return this.LancamentoRepository.findById(id);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BigDecimal ObteSaldoUsuario(Long id) {
+		BigDecimal receitas = this.LancamentoRepository.ObterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.RECEITA);
+		BigDecimal despesas = this.LancamentoRepository.ObterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.DESPESA);
+		
+		if(receitas == null) {
+			receitas = BigDecimal.ZERO;
+		}
+		
+		if(despesas == null) {
+			despesas = BigDecimal.ZERO;
+		}
+		
+		return receitas.subtract(despesas);
 	}
 
 }

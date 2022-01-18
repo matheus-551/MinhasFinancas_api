@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.dto.LancamentoDTO;
+import br.com.dto.StatusDTO;
 import br.com.exception.RegraNegocioException;
 import br.com.model.Lancamento;
 import br.com.model.Usuario;
@@ -52,7 +53,7 @@ public class LancamentoController {
 		}
 		
 		if(lancamentoDto.getStatus() != null) {
-			lancamento.setStatusLancamento(StatusLancamento.valueOf(lancamentoDto.getStatus()));
+			lancamento.setStatus(StatusLancamento.valueOf(lancamentoDto.getStatus()));
 		}
 
 		return lancamento;
@@ -72,7 +73,7 @@ public class LancamentoController {
 	}
 	
 	@PutMapping("{id}")
-	public ResponseEntity atualizarLancamento(@PathVariable("id") Long id, @RequestBody LancamentoDTO lancamentoDto) {
+	public ResponseEntity atualizaLancamento(@PathVariable("id") Long id, @RequestBody LancamentoDTO lancamentoDto) {
 		return lancamentoService.ObterPorId(id).map( entity -> {
 			try {
 				Lancamento lancamento = converter(lancamentoDto);
@@ -89,29 +90,49 @@ public class LancamentoController {
 			new ResponseEntity("Lancamento não encontrado.", HttpStatus.BAD_REQUEST));
 	}
 	
+	@PutMapping("{id}/atualiza-status")
+	public ResponseEntity atualizaStatusLancamento(@PathVariable("id") Long id,@RequestBody StatusDTO statusDto) {
+		return lancamentoService.ObterPorId(id).map(entity -> {
+			StatusLancamento statusSelecionado = StatusLancamento.valueOf(statusDto.getStatus());
+			
+			if(statusSelecionado == null) {
+				return ResponseEntity.badRequest().body("Não foi possível atualizar o status do lançamento.");
+			}
+			
+			try {
+				entity.setStatus(statusSelecionado);
+				lancamentoService.AtualizarLancamento(entity);
+				return ResponseEntity.ok(entity);				
+			}catch (RegraNegocioException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
+			
+		}).orElseGet( () -> 
+		new ResponseEntity("Lancamento não encontrado.", HttpStatus.BAD_REQUEST));
+	}
+	
 	@GetMapping
 	public ResponseEntity FiltrarLancamento(
-				@RequestParam(value = "descricao", required = false) String descricao,
-				@RequestParam(value = "mes", required = false) Integer mes,
-				@RequestParam(value = "ano", required = false) Integer ano,
-				@RequestParam("usuario") Long idUsuario
+				@RequestParam(value = "Descricao", required = false) String Descricao,
+				@RequestParam(value = "Mes", required = false) Integer Mes,
+				@RequestParam(value = "Ano", required = false) Integer Ano,
+				@RequestParam("Usuario") Long idUsuario
 			) {
+				
 		
-		System.out.println(descricao);
-		
-		Lancamento lancamentoFiltro = new Lancamento();
-		lancamentoFiltro.setDescricao(descricao);
-		lancamentoFiltro.setMes(mes);
-		lancamentoFiltro.setAno(ano);
+		Lancamento lancamento = new Lancamento();
+		lancamento.setDescricao(Descricao);
+		lancamento.setAno(Ano);
+		lancamento.setMes(Mes);
 		
 		Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
 		if(!usuario.isPresent()) {
 			return ResponseEntity.badRequest().body("Não foi possivel realizar a consulta. Usuário não encontrado.");
 		}else {
-			lancamentoFiltro.setUsuario(usuario.get());
+			lancamento.setUsuario(usuario.get());
 		}
 		
-		List<Lancamento> lancamentos = lancamentoService.BuscaLancamento(lancamentoFiltro);
+		List<Lancamento> lancamentos = lancamentoService.BuscaLancamento(lancamento);
 		return ResponseEntity.ok(lancamentos);
 	}
 	
