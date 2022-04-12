@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,6 +24,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table( name = "lancamento", schema = "financas" )
 @Builder
 @Data
 @NoArgsConstructor
@@ -49,7 +51,7 @@ public class Lancamento {
 	@Column(name = "tipo")
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipoLancamento;
-	@Column(name = "status_lancamento")
+	@Column(name = "status")
 	@Enumerated(EnumType.STRING)
 	private StatusLancamento status;
 	

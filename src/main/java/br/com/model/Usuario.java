@@ -7,8 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table( name = "usuario", schema = "financas" )
 @Builder
 @Data
 @NoArgsConstructor
@@ -32,6 +32,5 @@ public class Usuario {
 	@Column(name = "senha")
 	private String senha;
 	@Column(name = "data_cadastro")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate DataCadastro;
 }
