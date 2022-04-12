@@ -113,10 +113,10 @@ public class LancamentoController {
 	
 	@GetMapping
 	public ResponseEntity FiltrarLancamento(
-				@RequestParam(value = "Descricao", required = false) String Descricao,
-				@RequestParam(value = "Mes", required = false) Integer Mes,
-				@RequestParam(value = "Ano", required = false) Integer Ano,
-				@RequestParam("Usuario") Long idUsuario
+				@RequestParam(value = "descricao", required = false) String Descricao,
+				@RequestParam(value = "mes", required = false) Integer Mes,
+				@RequestParam(value = "ano", required = false) Integer Ano,
+				@RequestParam("usuario") Long idUsuario
 			) {
 				
 		

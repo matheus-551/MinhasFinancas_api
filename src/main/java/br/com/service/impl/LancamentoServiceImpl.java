@@ -7,9 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,12 +56,17 @@ public class LancamentoServiceImpl implements LancamentoService{
 	@Override
 	@Transactional(readOnly = true)
 	public List<Lancamento> BuscaLancamento(Lancamento lancamentoFiltro) {
-		Example<Lancamento> example = Example.of( lancamentoFiltro, 
-				ExampleMatcher.matching()
-				.withIgnoreCase()
-				.withStringMatcher(StringMatcher.CONTAINING));
+		List<Lancamento> lancamentos;
 		
-		List<Lancamento> lancamentos = this.LancamentoRepository.findAll(example);
+		if (lancamentoFiltro.getDescricao() != null) {
+			lancamentos = this.LancamentoRepository
+							.findByDescricaoIgnoreCaseContaining(lancamentoFiltro.getDescricao());
+		}else if (lancamentoFiltro.getAno() != null) {
+			lancamentos = this.LancamentoRepository.findByAno(lancamentoFiltro.getAno());
+		}else {
+			lancamentos = this.LancamentoRepository.findByMes(lancamentoFiltro.getMes());
+		}
+		
 		return lancamentos;
 	}
 
