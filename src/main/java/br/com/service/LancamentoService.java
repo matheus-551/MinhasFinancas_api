@@ -15,6 +15,8 @@ public interface LancamentoService {
 	
 	void deletarLancamento(Lancamento lancamento);
 	
+	List<Lancamento> ListaLancamentoUsuario(long idUsuario);
+	
 	List<Lancamento> BuscaLancamento(Lancamento lancamentoFiltro);
 	
 	void AtualizarStatus(Lancamento lancamento, StatusLancamento status);

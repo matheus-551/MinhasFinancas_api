@@ -33,7 +33,21 @@ public class LancamentoController {
 	
 	private final LancamentoService lancamentoService;
 	private final UsuarioService usuarioService;
-		
+	
+	//Método qye converte a Entidade em DTO
+	private LancamentoDTO converterEntity(Lancamento lancamento) {
+		return LancamentoDTO.builder()
+				.id(lancamento.getId())
+				.descricao(lancamento.getDescricao())
+				.valor(lancamento.getValor())
+				.mes(lancamento.getMes())
+				.ano(lancamento.getAno())
+				.status(lancamento.getStatus().name())
+				.tipo(lancamento.getTipoLancamento().name())
+				.usuario(lancamento.getUsuario().getId())
+				.build();
+	}
+	
 	//Método que converte o DTO em lancamento
 	private Lancamento converter(LancamentoDTO lancamentoDto) {
 		Lancamento lancamento = new Lancamento(	);
@@ -59,6 +73,13 @@ public class LancamentoController {
 		return lancamento;
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity ObterLancamento(@PathVariable("id") Long id) {
+		return lancamentoService.ObterPorId(id)
+				.map(lancamento -> new ResponseEntity(converterEntity(lancamento), HttpStatus.OK) )
+				.orElseGet( () -> new ResponseEntity(HttpStatus.NOT_FOUND) );
+	}
+	
 	@PostMapping
 	public ResponseEntity SalvarLancamento(@RequestBody LancamentoDTO lancamentoDto) {
 		try {
@@ -72,7 +93,7 @@ public class LancamentoController {
 		
 	}
 	
-	@PutMapping("{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity atualizaLancamento(@PathVariable("id") Long id, @RequestBody LancamentoDTO lancamentoDto) {
 		return lancamentoService.ObterPorId(id).map( entity -> {
 			try {
@@ -116,6 +137,7 @@ public class LancamentoController {
 				@RequestParam(value = "descricao", required = false) String Descricao,
 				@RequestParam(value = "mes", required = false) Integer Mes,
 				@RequestParam(value = "ano", required = false) Integer Ano,
+				@RequestParam(value = "tipoLancamento", required = false) TipoLancamento tipo,
 				@RequestParam("usuario") Long idUsuario
 			) {
 				
@@ -124,6 +146,7 @@ public class LancamentoController {
 		lancamento.setDescricao(Descricao);
 		lancamento.setAno(Ano);
 		lancamento.setMes(Mes);
+		lancamento.setTipoLancamento(tipo);
 		
 		Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
 		if(!usuario.isPresent()) {
@@ -134,6 +157,18 @@ public class LancamentoController {
 		
 		List<Lancamento> lancamentos = lancamentoService.BuscaLancamento(lancamento);
 		return ResponseEntity.ok(lancamentos);
+	}
+	
+	@GetMapping("/{idUsuario}/lista-lancamentos")
+	public ResponseEntity ListaLancamentosUsuario(@PathVariable("idUsuario") long idUsuario) {
+		Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
+		
+		if(!usuario.isPresent()) {
+			return ResponseEntity.badRequest().body("Não foi possivél realizar a busca dos lançamentos");
+		}else {			
+			List<Lancamento> lancamentos = lancamentoService.ListaLancamentoUsuario(usuario.get().getId());
+			return ResponseEntity.ok(lancamentos);
+		}
 	}
 	
 	@DeleteMapping("{id}")

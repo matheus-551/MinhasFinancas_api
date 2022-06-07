@@ -56,14 +56,18 @@ public class LancamentoServiceImpl implements LancamentoService{
 	@Override
 	@Transactional(readOnly = true)
 	public List<Lancamento> BuscaLancamento(Lancamento lancamentoFiltro) {
-		List<Lancamento> lancamentos;
+		List<Lancamento> lancamentos = null;
+		
+		lancamentos = this.LancamentoRepository.findByAno(lancamentoFiltro.getAno());
 		
 		if (lancamentoFiltro.getDescricao() != null) {
-			lancamentos = this.LancamentoRepository
-							.findByDescricaoIgnoreCaseContaining(lancamentoFiltro.getDescricao());
-		}else if (lancamentoFiltro.getAno() != null) {
-			lancamentos = this.LancamentoRepository.findByAno(lancamentoFiltro.getAno());
-		}else {
+			lancamentos = this.LancamentoRepository.findByDescricaoIgnoreCaseContaining(lancamentoFiltro.getDescricao());
+		}
+		if (lancamentoFiltro.getTipoLancamento() != null) {
+			lancamentos = this.LancamentoRepository.findByTipoLancamento(lancamentoFiltro.getTipoLancamento());
+		} 
+		
+		if (lancamentoFiltro.getMes() != null){
 			lancamentos = this.LancamentoRepository.findByMes(lancamentoFiltro.getMes());
 		}
 		
@@ -124,6 +128,11 @@ public class LancamentoServiceImpl implements LancamentoService{
 		}
 		
 		return receitas.subtract(despesas);
+	}
+
+	@Override
+	public List<Lancamento> ListaLancamentoUsuario(long idUsuario) {
+		return LancamentoRepository.findByLancamentosUsuario(idUsuario);
 	}
 
 }
