@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.model.Lancamento;
+import br.com.model.enums.StatusLancamento;
 import br.com.model.enums.TipoLancamento;
 
 public interface LancamentoRepository extends JpaRepository<Lancamento, Long>{
@@ -28,6 +29,6 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long>{
 	// Busca lancamento por tipo
 	List<Lancamento> findByTipoLancamento(TipoLancamento tipo);
 	
-	@Query(value = "select sum(l.valor) from Lancamento l join l.usuario u where u.id = :idUsuario and l.tipoLancamento = :tipo group by u")
-	BigDecimal ObterSaldoPorTipoLancamentoEUsuario(@Param("idUsuario") Long idUsuario, @Param("tipo") TipoLancamento tipo);
+	@Query(value = "select sum(l.valor) from Lancamento l join l.usuario u where u.id = :idUsuario and l.tipoLancamento = :tipo and l.status = :status group by u")
+	BigDecimal ObterSaldoPorTipoLancamentoEUsuarioEStatus(@Param("idUsuario") Long idUsuario, @Param("tipo") TipoLancamento tipo, @Param("status") StatusLancamento status );
 }

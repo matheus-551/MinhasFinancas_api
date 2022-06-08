@@ -116,8 +116,8 @@ public class LancamentoServiceImpl implements LancamentoService{
 	@Override
 	@Transactional(readOnly = true)
 	public BigDecimal ObteSaldoUsuario(Long id) {
-		BigDecimal receitas = this.LancamentoRepository.ObterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.RECEITA);
-		BigDecimal despesas = this.LancamentoRepository.ObterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.DESPESA);
+		BigDecimal receitas = this.LancamentoRepository.ObterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.RECEITA, StatusLancamento.EFETIVADO);
+		BigDecimal despesas = this.LancamentoRepository.ObterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.DESPESA, StatusLancamento.EFETIVADO);
 		
 		if(receitas == null) {
 			receitas = BigDecimal.ZERO;

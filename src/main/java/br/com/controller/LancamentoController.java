@@ -111,7 +111,7 @@ public class LancamentoController {
 			new ResponseEntity("Lancamento não encontrado.", HttpStatus.BAD_REQUEST));
 	}
 	
-	@PutMapping("{id}/atualiza-status")
+	@PutMapping("/{id}/atualiza-status")
 	public ResponseEntity atualizaStatusLancamento(@PathVariable("id") Long id,@RequestBody StatusDTO statusDto) {
 		return lancamentoService.ObterPorId(id).map(entity -> {
 			StatusLancamento statusSelecionado = StatusLancamento.valueOf(statusDto.getStatus());
